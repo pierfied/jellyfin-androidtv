@@ -73,17 +73,13 @@ class ExoPlayerProfile(
 			TranscodingProfile().apply {
 				type = DlnaProfileType.Video
 				this.context = EncodingContext.Streaming
-				container = Codec.Container.TS
-				videoCodec = buildList {
-					if (deviceHevcCodecProfile.ContainsCodec(Codec.Video.HEVC, Codec.Container.TS)) add(Codec.Video.HEVC)
-					add(Codec.Video.H264)
-				}.joinToString(",")
+				container = Codec.Container.MKV
+				videoCodec = Codec.Video.H264
 				audioCodec = when {
 					Utils.downMixAudio(context) -> downmixSupportedAudioCodecs
 					else -> allSupportedAudioCodecsWithoutFFmpegExperimental
 				}.joinToString(",")
-				protocol = "hls"
-				copyTimestamps = false
+				copyTimestamps = true
 			},
 			// MP3 audio profile
 			TranscodingProfile().apply {
@@ -214,15 +210,16 @@ class ExoPlayerProfile(
 
 		subtitleProfiles = arrayOf(
 			subtitleProfile(Codec.Subtitle.SRT, SubtitleDeliveryMethod.External),
-			subtitleProfile(Codec.Subtitle.SUBRIP, SubtitleDeliveryMethod.External),
-			subtitleProfile(Codec.Subtitle.ASS, SubtitleDeliveryMethod.Encode),
-			subtitleProfile(Codec.Subtitle.SSA, SubtitleDeliveryMethod.Encode),
+			subtitleProfile(Codec.Subtitle.SRT, SubtitleDeliveryMethod.Embed),
+			subtitleProfile(Codec.Subtitle.SUBRIP, SubtitleDeliveryMethod.Embed),
+			subtitleProfile(Codec.Subtitle.ASS, SubtitleDeliveryMethod.Embed),
+			subtitleProfile(Codec.Subtitle.SSA, SubtitleDeliveryMethod.Embed),
 			subtitleProfile(Codec.Subtitle.PGS, SubtitleDeliveryMethod.Embed),
 			subtitleProfile(Codec.Subtitle.PGSSUB, SubtitleDeliveryMethod.Embed),
-			subtitleProfile(Codec.Subtitle.DVBSUB, SubtitleDeliveryMethod.Embed),
-			subtitleProfile(Codec.Subtitle.DVDSUB, SubtitleDeliveryMethod.Encode),
+			subtitleProfile(Codec.Subtitle.DVDSUB, SubtitleDeliveryMethod.Embed),
 			subtitleProfile(Codec.Subtitle.VTT, SubtitleDeliveryMethod.Embed),
 			subtitleProfile(Codec.Subtitle.SUB, SubtitleDeliveryMethod.Embed),
+			subtitleProfile(Codec.Subtitle.SMI, SubtitleDeliveryMethod.Embed),
 			subtitleProfile(Codec.Subtitle.IDX, SubtitleDeliveryMethod.Embed)
 		)
 	}
